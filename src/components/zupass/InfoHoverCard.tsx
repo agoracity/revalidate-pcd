@@ -1,9 +1,15 @@
-import { CalendarIcon } from "@radix-ui/react-icons"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card"
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-export function InfoHoverCard({ ticketTypeName, eventId, productNames }) {
+interface InfoHoverCardProps {
+  ticketTypeName: string;
+  eventId: string;
+  productNames: string[];
+}
+
+export function InfoHoverCard({ ticketTypeName, eventId, productNames }: InfoHoverCardProps) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -28,5 +34,5 @@ export function InfoHoverCard({ ticketTypeName, eventId, productNames }) {
         </div>
       </HoverCardContent>
     </HoverCard>
-  )
+  );
 }

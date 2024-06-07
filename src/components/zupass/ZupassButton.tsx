@@ -13,11 +13,7 @@ const ZupassButton: React.FC<ZupassButtonProps> = ({ children, className = '', e
   const { login } = useZupass();
 
   const loginHandler = async () => {
-    try {
-      await login(eventName); // Pass the eventName to the login function
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
+    await login(eventName);
   };
 
   return (

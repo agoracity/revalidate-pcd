@@ -1,16 +1,19 @@
 import { ZuAuthArgs, authenticate, zuAuthPopup } from "@pcd/zuauth";
-import { InputParams, TicketTypeName } from "./types";
+import { TicketTypeName } from "./types";
 import { whitelistedTickets } from "@/config/zupass-config";
+import { useLoadingStore } from "@/store/store";
 
-async function login(inputParams: InputParams | null) {
+async function login(eventName: string | null) {
+  const setLoading = useLoadingStore.getState().setLoading;
 
-  const bigIntNonce = 12345n
+  const bigIntNonce = 12345n;
   const watermark = bigIntNonce.toString();
 
-  // Ensure the tickets are formatted correctly
-  const config = Object.entries(whitelistedTickets).flatMap(
-    ([ticketType, tickets]) =>
+  // Ensure the tickets are formatted correctly 
+  const config = Object.entries(whitelistedTickets)
+    .flatMap(([ticketType, tickets]) =>
       tickets
+        .filter(ticket => ticket.eventName === eventName) // Filter by eventName
         .map((ticket) => {
           if (ticket.eventId && ticket.productId) {
             return {
@@ -23,13 +26,10 @@ async function login(inputParams: InputParams | null) {
               publicKey: ticket.publicKey
             };
           }
-          console.error("Invalid ticket format:", ticket);
           return null;
         })
-        .filter(
-          (ticket): ticket is NonNullable<typeof ticket> => ticket !== null
-        )
-  );
+        .filter((ticket): ticket is NonNullable<typeof ticket> => ticket !== null)
+    );
 
   const args: ZuAuthArgs = {
     fieldsToReveal: {
@@ -40,23 +40,25 @@ async function login(inputParams: InputParams | null) {
     },
     watermark,
     config,
-    proofTitle: "Sign-In with Zupass",
-    proofDescription: "**Select a valid ticket to hop into the zuzaverse.**"
   };
 
-  const result = await zuAuthPopup(args);
-  if (result.type === "pcd") {
-    try {
+  setLoading(true); // Set loading to true
+
+  try {
+    const result = await zuAuthPopup(args);
+    if (result.type === "pcd") {
       const pcd = await authenticate(result.pcdStr, watermark, config);
       console.log("Got PCD data: ", pcd.claim.partialTicket);
-    } catch (e) {
-      console.log("Authentication failed: ", e);
     }
+  } catch (e) {
+    console.log("Authentication failed: ", e);
+  } finally {
+    setLoading(false); // Set loading to false
   }
 }
 
 export function useZupass(): {
-  login: (params: InputParams | null) => Promise<void>;
+  login: (eventName: string | null) => Promise<void>;
 } {
   return { login };
 }

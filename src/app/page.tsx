@@ -27,8 +27,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="flex items-center flex-col">
-                  <ZupassButton>Validate</ZupassButton>
-                  <p className="text-sm">Revalidate</p>
+                  <ZupassButton eventName={tickets[0].eventName || 'Unknown Event'}>Validate</ZupassButton>
                 </div>
               </div>
             </div>

@@ -4,7 +4,7 @@ import ZupassButton from "@/components/zupass/ZupassButton";
 import { whitelistedTickets } from "@/config/zupass-config";
 import { InfoHoverCard } from '@/components/zupass/InfoHoverCard';
 import { RippleLoader } from '@/components/zupass/RippleLoader';
-import { useLoadingStore } from "@/store/store";
+import { useLoadingStore } from '@/store/store';
 
 export default function Home() {
   const isLoading = useLoadingStore((state) => state.isLoading);
@@ -36,7 +36,12 @@ export default function Home() {
                       />
                     </div>
                     <div className="flex items-center flex-col">
-                      <ZupassButton eventName={tickets[0].eventName || 'Unknown Event'}>Validate</ZupassButton>
+                      <ZupassButton 
+                        eventName={tickets[0].eventName || 'Unknown Event'}
+                        ticketId={`${ticketTypeName}-${tickets[0].eventId}`} // Generate a unique ticketId
+                      >
+                        Validate
+                      </ZupassButton>
                     </div>
                   </div>
                 </div>

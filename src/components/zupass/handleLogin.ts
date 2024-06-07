@@ -3,8 +3,9 @@ import { TicketTypeName } from "./types";
 import { whitelistedTickets } from "@/config/zupass-config";
 import { useLoadingStore } from "@/store/store";
 
-async function login(eventName: string | null) {
+async function login(eventName: string | null, ticketId: string) {
   const setLoading = useLoadingStore.getState().setLoading;
+  const validateTicket = useLoadingStore.getState().validateTicket;
 
   const bigIntNonce = 12345n;
   const watermark = bigIntNonce.toString();
@@ -40,6 +41,8 @@ async function login(eventName: string | null) {
     },
     watermark,
     config,
+    proofTitle: "Sign-In with Zupass",
+    proofDescription: "**Select a valid ticket to hop into the zuzaverse.**"
   };
 
   setLoading(true); // Set loading to true
@@ -49,6 +52,7 @@ async function login(eventName: string | null) {
     if (result.type === "pcd") {
       const pcd = await authenticate(result.pcdStr, watermark, config);
       console.log("Got PCD data: ", pcd.claim.partialTicket);
+      validateTicket(ticketId);  // Validate the ticket
     }
   } catch (e) {
     console.log("Authentication failed: ", e);
@@ -58,7 +62,7 @@ async function login(eventName: string | null) {
 }
 
 export function useZupass(): {
-  login: (eventName: string | null) => Promise<void>;
+  login: (eventName: string | null, ticketId: string) => Promise<void>;
 } {
   return { login };
 }

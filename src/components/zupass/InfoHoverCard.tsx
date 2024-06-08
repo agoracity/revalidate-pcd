@@ -14,7 +14,7 @@ export function InfoHoverCard({ ticketTypeName, eventId, productNames }: InfoHov
     <HoverCard>
       <HoverCardTrigger asChild>
         <p className='font-bold flex items-center justify-center gap-1 h-6 rounded-md px-1.5 border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.05)] text-white cursor-pointer'>
-          {ticketTypeName}
+          {ticketTypeName} &#9432;
         </p>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">

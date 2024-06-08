@@ -1,11 +1,11 @@
 import { ZuAuthArgs, authenticate, zuAuthPopup } from "@pcd/zuauth";
 import { TicketTypeName } from "./types";
 import { whitelistedTickets } from "@/config/zupass-config";
-import { useLoadingStore } from "@/store/store";
+import usePCDStore  from '@/store/store';
 
 async function login(eventName: string | null, ticketId: string) {
-  const setLoading = useLoadingStore.getState().setLoading;
-  const validateTicket = useLoadingStore.getState().validateTicket;
+  const setLoading = usePCDStore.getState().setLoading;
+  const validateTicket = usePCDStore.getState().validateTicket;
 
   const bigIntNonce = 12345n;
   const watermark = bigIntNonce.toString();
